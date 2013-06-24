@@ -1,0 +1,8 @@
+*.pyc
+*.mo
+*.po
+*.db
+*.swp
+*~
+media/*
+media/**/

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}Title here{% endblock %}</title>
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% block meta %}{% endblock %}
+
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    
+    <link href="{{ STATIC_URL }}styles.css" media="screen" rel="stylesheet" type="text/css" />
+    {% block css %}
+    {% endblock %}
+
+    <!-- Site and template specific CSS -->
+    <style type="text/css" media="screen">
+        {% block extracss %}
+        {% endblock %}
+    </style>
+    
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js></script>
+    
+    {% block head %}{% endblock %}
+  </head>
+
+<body>
+    <div class="container">
+        
+        <header>
+            {% block header %}
+            {% include "header.html" %}
+            {% endblock %}
+        </header>
+
+        {% block container %}{% endblock %}
+        
+        <footer>
+            {% block footer %}
+            {% include "footer.html" %}
+            {% endblock %}
+        </footer>
+    </div>
+    
+    
+    <!-- Load JQuery 1.7.2 from the Google CDN -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+
+    {% block scripts %}
+    {% endblock %}
+
+    {% include "google_analytics.html" %}
+    
+    <script>
+        $(document).ready(function() {
+            {% block documentready %}
+            {% endblock %}
+        })
+
+        /* Javascript functions, etc. */
+        {% block script %}
+        {% endblock %}
+    </script>
+</body>
+</html>
