@@ -4,6 +4,7 @@ from unipath import Path
 
 from django.core.exceptions import ImproperlyConfigured
 
+
 def get_env_variable(var_name):
     """ Get the environment variable or return exception """
     try:
@@ -35,12 +36,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '',                       # Or path to database file if using sqlite3.
+        'USER': '',                       # Not used with sqlite3.
+        'PASSWORD': '',                   # Not used with sqlite3.
+        'HOST': '',                       # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                       # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -100,7 +101,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'mysite.urls'
+ROOT_URLCONF = 'bookdiscovery.urls'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -110,6 +111,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'south',
+    'books',
 )
 
 LOGGING = {
