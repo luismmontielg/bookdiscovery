@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}
+Index
+{% endblock %}
+
+{% block container %}
+<div class="jumbotron">
+	<h1>Start discovering good reads!</h1>
+	<p class="lead">You can start searching by books or category, and also recommend some books.<p>
+	<a class="btn btn-large btn-success" href="#">Get started!</a>
+</div>
+<hr>
+  {% for category in object_list %}
+      {% if forloop.counter0|divisibleby:"3" or not forloop.counter0 %}
+      <div class="row-fluid">
+      {% endif %}
+        <div class="span4">
+          <h3>{{ category|title }}</h3>
+          <p>
+          {{ category.description|truncatewords:"60" }}
+          <p><a class="btn pull-right" href="#">View Books <i class="icon-book"></i></a></p>
+        </div>
+      {% if forloop.counter|divisibleby:"3" %}
+      </div>
+      {% endif %}
+  {% endfor %}
+
+{% endblock %}
+
+

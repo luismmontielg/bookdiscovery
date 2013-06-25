@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.db import models
-
 # from django.utils.translation import ugettext, ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.template.defaultfilters import slugify
 
 from taggit.managers import TaggableManager
 
@@ -44,6 +44,7 @@ class Recommendation(models.Model):
 class Book(BaseModel):
     authors = models.ManyToManyField('Author')
     title = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100)
     categories = models.ManyToManyField('Category')
     publisher = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField()
@@ -51,12 +52,21 @@ class Book(BaseModel):
     info_link = models.URLField(blank=True, null=True, verify_exists=False)
     tags = TaggableManager()
 
+    @models.permalink
+    def get_absolute_url(self):
+        return reverse("books_book_details", kwargs={"slug": self.slug})
+
     def __unicode__(self):
         return self.title
 
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.slug = slugify(self.title)
+        super(Book, self).save(*args, **kwargs)
+
 
 class Author(models.Model):
-    name = models.CharField(verbose_name='Author', max_length=100)
+    name = models.CharField(max_length=100)
 
     def __unicode__(self):
         return self.name
@@ -64,6 +74,7 @@ class Author(models.Model):
 
 class Category(BaseModel):
     name = models.CharField(max_length=50)
+    description = models.TextField(null=True, blank=True)
 
     def __unicode__(self):
         return self.name
