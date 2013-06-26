@@ -2,6 +2,7 @@
 from django.db import models
 # from django.utils.translation import ugettext, ugettext_lazy as _
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
 from django.template.defaultfilters import slugify
 
 from taggit.managers import TaggableManager
@@ -54,7 +55,7 @@ class Book(BaseModel):
 
     @models.permalink
     def get_absolute_url(self):
-        return reverse("books_book_details", kwargs={"slug": self.slug})
+        return reverse('books_book_details', kwargs={'slug': self.slug})
 
     def __unicode__(self):
         return self.title
@@ -74,7 +75,16 @@ class Author(models.Model):
 
 class Category(BaseModel):
     name = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=60)
     description = models.TextField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.id or not self.slug:
+            self.slug = slugify(self.name)
+        super(Category, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = "categories"

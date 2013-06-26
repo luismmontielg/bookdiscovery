@@ -1,5 +1,22 @@
 {% extends "base.html" %}
 
+{% block extracss %}
+{{ block.super }}
+
+#search-form {
+  padding-top: 3em;
+  padding-bottom: 1em;
+}
+
+#search-form input {
+  width: 450px;
+}
+
+.jumbotron {
+  margin-bottom: 55px;
+}
+
+{% endblock %}
 {% block title %}
 Index
 {% endblock %}
@@ -7,10 +24,15 @@ Index
 {% block container %}
 <div class="jumbotron">
 	<h1>Start discovering good reads!</h1>
-	<p class="lead">You can start searching by books or category, and also recommend some books.<p>
-	<a class="btn btn-large btn-success" href="#">Get started!</a>
+
+  <form class="form-search" id="search-form" action="/books">
+    <input type="text" placeholder="Python, java, philosophy" class="input-large search-query" name="q">
+    <button type="submit" class="btn btn-info">Search</button>
+  </form>
+
+  <p class="lead">Or browse by category.<p>
+
 </div>
-<hr>
   {% for category in object_list %}
       {% if forloop.counter0|divisibleby:"3" or not forloop.counter0 %}
       <div class="row-fluid">
