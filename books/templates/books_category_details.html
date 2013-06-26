@@ -1,8 +1,21 @@
 {% extends "base.html" %}
 
 {% block title %}
+Books under {{ category }}
 {% endblock %}
 
 {% block container %}
+<div class="jumbotron">
+{% include "books_book_search.html" %}
+</div>
+<h1>{{ category|title }}</h1>
+{% for book in object_list %}
+{% include "books_book_listing.html" %}
+{% endfor %}
 
+{% include "books_book_pagination.html" %}
+{% endblock %}
+
+{% block documentready %}
+$("#categories-li").addClass("active");
 {% endblock %}

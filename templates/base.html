@@ -14,7 +14,6 @@
 
     <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
     
-    <link href="{{ STATIC_URL }}css/style.css" media="screen" rel="stylesheet" type="text/css" />
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
     {% block css %}
@@ -96,6 +95,7 @@
 	      }
         {% endblock %}
     </style>
+    <link href="{{ STATIC_URL }}css/style.css" media="screen" rel="stylesheet" type="text/css" />
     
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.2/html5shiv.js"></script>
     
@@ -130,7 +130,7 @@
         $(document).ready(function() {
             {% block documentready %}
             {% endblock %}
-        })
+        });
 
         /* Javascript functions, etc. */
         {% block script %}

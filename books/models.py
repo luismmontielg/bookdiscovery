@@ -53,7 +53,6 @@ class Book(BaseModel):
     info_link = models.URLField(blank=True, null=True, verify_exists=False)
     tags = TaggableManager()
 
-    @models.permalink
     def get_absolute_url(self):
         return reverse('books_book_details', kwargs={'slug': self.slug})
 
@@ -82,6 +81,9 @@ class Category(BaseModel):
         if not self.id or not self.slug:
             self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('books_category_details', kwargs={'slug': self.slug})
 
     def __unicode__(self):
         return self.name

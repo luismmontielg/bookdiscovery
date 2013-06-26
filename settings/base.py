@@ -106,3 +106,12 @@ BONUS = {
     "recommended_book_read": 2,
     "recommended_book_recommended": 3,
 }
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.core.context_processors.auth",
+    "django.core.context_processors.debug",
+    "django.core.context_processors.i18n",
+    "django.core.context_processors.media",
+    "django.core.context_processors.static",
+    "django.core.context_processors.request",
+)

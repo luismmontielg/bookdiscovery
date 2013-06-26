@@ -5,9 +5,17 @@ Search results
 {% endblock %}
 
 {% block container %}
-
+<div class="jumbotron">
+{% include "books_book_search.html" %}
+</div>
+<h1>All books</h1>
 {% for book in object_list %}
-<p>{{ book }}</p>
+{% include "books_book_listing.html" %}
 {% endfor %}
 
+{% include "books_book_pagination.html" %}
+{% endblock %}
+
+{% block documentready %}
+$("#search-li").addClass("active");
 {% endblock %}

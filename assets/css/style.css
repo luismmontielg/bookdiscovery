@@ -1,0 +1,38 @@
+#search-form {
+  padding-top: 3em;
+  padding-bottom: 1em;
+}
+
+#search-form input {
+  width: 450px;
+  margin-right: 45px;
+}
+
+.jumbotron {
+  margin-bottom: 55px;
+}
+
+
+.book {
+  background-color: #dceaf4;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.book-thumbnail {
+  display: block;
+}
+
+.category-container {
+  background-color: #dceaf4;
+}
+
+.book-right-panel {
+  margin-top: 10px;
+}
+
+.book-right-panel * {
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+

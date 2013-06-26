@@ -1,22 +1,16 @@
 {% extends "base.html" %}
 
 {% block title %}
-Discover Books
+All Categories
 {% endblock %}
 
 {% block container %}
 <div class="jumbotron">
-	<h1>Start discovering good reads!</h1>
-
-{% include "books_book_search.html" %}
-
-<p class="lead">Or browse by category<p>
-
+<h1>Pick a category</h1>
 </div>
 {% include "books_category_layout.html" %}
 {% endblock %}
 
-
 {% block documentready %}
-$("#home-li").addClass("active");
+$("#categories-li").addClass("active");
 {% endblock %}

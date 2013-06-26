@@ -1,0 +1,14 @@
+  {% for category in object_list %}
+      {% if forloop.counter0|divisibleby:"3" or not forloop.counter0 %}
+      <div class="row-fluid">
+      {% endif %}
+        <div class="span4 well category-container">
+          <h3>{{ category|title }}</h3>
+          <p>
+          {{ category.description|truncatewords:"60" }}
+          <p><a class="btn pull-right" href="{{ category.get_absolute_url }}">View Books <i class="icon-book"></i></a></p>
+        </div>
+      {% if forloop.counter|divisibleby:"3" %}
+      </div>
+      {% endif %}
+  {% endfor %}

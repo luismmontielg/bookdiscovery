@@ -1,0 +1,34 @@
+<div class="row book well">
+    <div>
+        <div class="span7">
+            <h3>{{ book }}</h3>
+            <p>{{book.authors.all|join:", "}}</p>
+            <p>{{ book.description|truncatewords:"245" }}</p>
+        </div>
+        <div class="span2 pull-right book-right-panel">
+            <img class="book-thumbnail" src="{{ book.thumbnail_url }}"/>
+            <div class="btn btn-primary"><i class="icon-bookmark"></i>&nbsp;Want to read</div>
+            <div class="btn"><i class="icon-check"></i>&nbsp;Already read</div>
+            <div class="btn btn-success"><i class="icon-thumbs-up"></i>&nbsp;Recommend</div>
+        </div>
+    </div>
+
+    <div class="span9">
+        <div class="accordion">
+          <div class="accordion-group">
+            <div class="accordion-heading">
+              <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne{{forloop.counter0}}">
+                Show/Hide details
+              </a>
+            </div>
+            <div id="collapseOne{{forloop.counter0}}" class="accordion-body collapse">
+              <div class="accordion-inner">
+                Anim pariatur cliche...
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+</div>
+

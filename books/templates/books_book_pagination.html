@@ -1,0 +1,19 @@
+{% load i18n %}
+{% if is_paginated %}
+<div class="pagination">
+    <ul>
+    {% if page_obj.has_previous %}
+        <li><a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }} {% endifnotequal %}{% endfor %}"
+        class="prev">&lsaquo;&lsaquo; {% trans "previous" %}</a></li>
+    {% else %}
+        <li class="disabled prev"><a href="#">&lsaquo;&lsaquo; {% trans "previous" %}</a></li>
+    {% endif %}
+    {% if page_obj.has_next %}
+        <li><a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% ifnotequal key 'page' %}&{{ key }}={{ value }} {% endifnotequal %}{% endfor %}"
+        class="next">{% trans "next" %} &rsaquo;&rsaquo;</a></li>
+    {% else %}
+        <li class="disabled next"><a href="#">{% trans "next" %} &rsaquo;&rsaquo;</a></li>
+    {% endif %}
+    </ul>
+</div>
+{% endif %}

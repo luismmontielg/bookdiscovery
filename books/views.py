@@ -22,6 +22,8 @@ class AuthorDetailsView(DetailView):
 
 
 class BookSearchMixin(object):
+    paginate_by = 10
+
     def get_queryset(self):
         queryset = super(BookSearchMixin, self).get_queryset()
         q = self.request.GET.get('q', "").replace('"', "").replace("'", "")
@@ -38,21 +40,33 @@ class BookListView(BookSearchMixin, ListView):
     model = Book
 
 
+class CategoryListView(ListView):
+    template_name = "books_category_list.html"
+    model = Category
+
+
 class CategoryDetailsView(BookSearchMixin, ListView, DetailView):
     template_name = "books_category_details.html"
     model = Category
 
     def get_object(self, queryset=None):
-        return super(CategoryDetailsView, self).get_object(self, self.model._default_manager.all())
+        return super(CategoryDetailsView, self).get_object(self.model._default_manager.all())
 
     def get(self, request, **kwargs):
         self.object = self.get_object()
-        context = self.get_context_data(object=self.object)
-
+        self.queryset = self.object.book_set.all()
         self.object_list = self.get_queryset()
+        context = self.get_context_data(object=self.object, object_list=self.object_list)
         allow_empty = self.get_allow_empty()
         if not allow_empty and len(self.object_list) == 0:
             raise Http404(_(u"Empty list and '%(class_name)s.allow_empty' is False.")
                         % {'class_name': self.__class__.__name__})
         context = self.get_context_data(object_list=self.object_list)
         return self.render_to_response(context)
+
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryDetailsView, self).get_context_data(**kwargs)
+        context['category'] = self.object
+        return context
+        
