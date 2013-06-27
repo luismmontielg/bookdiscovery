@@ -1,0 +1,6 @@
+Congratulations,
+
+Please acivate your account:
+
+{{ activation_key }}
+

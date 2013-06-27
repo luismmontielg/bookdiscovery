@@ -7,7 +7,11 @@
 	<li id="home-li"><a href="{% url books_index %}">Home</a></li>
 	<li id="search-li"><a href="{% url books_book_list %}">Search for Books</a></li>
 	<li id="categories-li"><a href="{% url books_category_list %}">All Categories</a></li>
-	<li><a href="#">Login/Register</a></li>
+    {% if user.is_authenticated %}
+	    <li id="registration-li"><a href="{{ request.user.get_absolute_url }}">My Profile</a></li>
+    {% else %}
+	    <li id="registration-li"><a href="{% url registration_register %}">Login/Register</a></li>
+    {% endif %}
       </ul>
     </div>
   </div>

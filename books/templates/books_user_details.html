@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+User profile: {{ the_user.username }}
+{% endblock %}
+
+{% block container %}
+<h1>{{ the_user }} profile</h1>
+
+<p>{{ the_user.get_profile.bio }}</p>
+
+
+<h2>Recommendations</h2>
+{% for book in the_user.get_profile.recommended_books %}
+{% include "books_book_listing.html" %}
+{% empty %}
+The user has no recommended books
+{% endfor %}
+
+<h2>Read Books</h2>
+{% for book in the_user.get_profile.read_books %}
+{% include "books_book_listing.html" %}
+{% empty %}
+The user has no books
+{% endfor %}
+
+
+<h2>Want to read Books</h2>
+{% for book in the_user.get_profile.to_read_books %}
+{% include "books_book_listing.html" %}
+{% empty %}
+The user has no books
+{% endfor %}
+
+{% endblock %}

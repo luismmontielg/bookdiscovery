@@ -76,6 +76,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'south',
     'taggit',
+    'registration',
     'books',
 )
 
@@ -115,3 +116,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.static",
     "django.core.context_processors.request",
 )
+
+ACCOUNT_ACTIVATION_DAYS = 5
+
+AUTH_PROFILE_MODULE = 'books.UserProfile'

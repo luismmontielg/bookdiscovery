@@ -8,11 +8,45 @@ from django.template.defaultfilters import slugify
 from taggit.managers import TaggableManager
 
 
+def process_books(books, user):
+    if user.is_authenticated():
+        for book in books:
+            if user.get_profile().has_read_book(book):
+                book.read = True
+            elif user.get_profile().wants_book(book):
+                book.is_wanted = True
+            if user.get_profile().has_recommended_book(book):
+                book.recommended = True
+    return books
+
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User)
     points = models.IntegerField(default=0, help_text="the current user points")
     bio = models.TextField(blank=True, null=True)
     books = models.ManyToManyField('Book', through='BookRelation')
+
+    def wants_book(self, book):
+        return self.books.filter(bookrelation__read=False, bookrelation__book=book).count() > 0
+
+    def has_read_book(self, book):
+        return self.books.filter(bookrelation__read=True, bookrelation__book=book).count() > 0
+
+    def has_recommended_book(self, book):
+        return self.user.recommendation_set.filter(book=book).count() > 0
+
+    def _recommended_books(self):
+        return Book.objects.filter(id__in=self.user.recommendation_set.all().values_list('book_id'))
+
+    def recommended_books(self):
+        return process_books(self._recommended_books(), self.user)
+
+    def read_books(self):
+        return process_books(self.books.filter(bookrelation__read=True), self.user)
+        # .exclude(id__in=self._recommended_books()), self.user)
+
+    def to_read_books(self):
+        return process_books(self.books.filter(bookrelation__read=False), self.user)
 
     def __unicode__(self):
         return "User profile for %s" % self.user.username
@@ -24,7 +58,7 @@ class BookRelation(models.Model):
     read = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return "%s - %s" % (self.book, self.user.username)
+        return "%s - %s" % (self.book, self.user.user.username)
 
 
 class BaseModel(models.Model):
