@@ -2,6 +2,7 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.http import Http404
+from django.db.models import Count
 
 from .models import Book, Author, Category, process_books
 
@@ -39,6 +40,7 @@ class BookSearchMixin(object):
 class BookListView(BookSearchMixin, ListView):
     template_name = "books_book_list.html"
     model = Book
+    queryset = Book.ordered.all()
 
 
 class CategoryListView(ListView):
@@ -55,7 +57,7 @@ class CategoryDetailsView(BookSearchMixin, ListView, DetailView):
 
     def get(self, request, **kwargs):
         self.object = self.get_object()
-        self.queryset = self.object.book_set.all()
+        self.queryset = self.object.book_set.all().annotate(Count("recommendation")).order_by("-recommendation", "title")
         self.object_list = self.get_queryset()
         process_books(self.object_list, request.user)
         context = self.get_context_data(object=self.object, object_list=self.object_list)
@@ -66,17 +68,14 @@ class CategoryDetailsView(BookSearchMixin, ListView, DetailView):
         context = self.get_context_data(object_list=self.object_list)
         return self.render_to_response(context)
 
-
     def get_context_data(self, **kwargs):
         context = super(CategoryDetailsView, self).get_context_data(**kwargs)
         context['category'] = self.object
         return context
-        
+
 
 class UserDetailsView(DetailView):
     template_name = "books_user_details.html"
     slug_field = "username"
     model = User
     context_object_name = "the_user"
-
-

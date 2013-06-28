@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.db.models import Count
 # from django.utils.translation import ugettext, ugettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
@@ -76,6 +77,17 @@ class Recommendation(models.Model):
     tags = TaggableManager()
 
 
+class RecommendationManager(models.Manager):
+
+    def get_total(self):
+        return self.get_query_set().count()
+
+
+class BookManager(models.Manager):
+    def get_query_set(self):
+        return super(BookManager, self).get_query_set().annotate(Count("recommendation")).order_by("-recommendation", "title")
+
+
 class Book(BaseModel):
     authors = models.ManyToManyField('Author')
     title = models.CharField(max_length=100)
@@ -86,6 +98,7 @@ class Book(BaseModel):
     thumbnail_url = models.URLField(blank=True, null=True, verify_exists=False)
     info_link = models.URLField(blank=True, null=True, verify_exists=False)
     tags = TaggableManager()
+    ordered = BookManager()
 
     def get_absolute_url(self):
         return reverse('books_book_details', kwargs={'slug': self.slug})
@@ -97,6 +110,13 @@ class Book(BaseModel):
         if not self.id:
             self.slug = slugify(self.title)
         super(Book, self).save(*args, **kwargs)
+
+    @property
+    def recommendations(self):
+        return self.recommendation_set.count()
+
+    class Meta:
+        ordering = ["title"]
 
 
 class Author(models.Model):
@@ -124,3 +144,4 @@ class Category(BaseModel):
 
     class Meta:
         verbose_name_plural = "categories"
+        ordering = ["name"]
