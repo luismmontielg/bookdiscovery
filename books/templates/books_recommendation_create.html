@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block extracss %}
+{{ block.super }}
+textarea {
+  height: 50px;
+  width: 90%;
+}
+{% endblock %}
+
+{% block title %}
+Reviewing {{ book }}
+{% endblock %}
+
+{% block container %}
+<h1>Add recommendation</h1>
+{% include "books_book_listing.html" %}
+
+<div class="row">
+<div class="well">
+<form action="." method="POST">
+{{ form.as_p}}
+{% csrf_token %}
+<button class="btn btn-small btn-primary" type="submit">Submit</button>
+</form>
+<div>
+<div>
+
+
+{% endblock %}

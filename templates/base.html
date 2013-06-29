@@ -109,6 +109,7 @@
             {% include "header.html" %}
             {% endblock %}
 
+            {% include "messages.html" %}
         {% block container %}{% endblock %}
         
             {% block footer %}
@@ -120,6 +121,12 @@
     <!-- Load JQuery 1.7.2 from the Google CDN -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/csrf.js" %}"></script>
+    {% if user.is_authenticated %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/books.js" %}"></script>
+    {% endif %}
+
+    <link href="{{ STATIC_URL }}css/style.css" media="screen" rel="stylesheet" type="text/css" />
 
     {% block scripts %}
     {% endblock %}

@@ -8,7 +8,6 @@ from django.template.defaultfilters import slugify
 
 from taggit.managers import TaggableManager
 
-
 def process_books(books, user):
     if user.is_authenticated():
         for book in books:
@@ -18,6 +17,7 @@ def process_books(books, user):
                 book.is_wanted = True
             if user.get_profile().has_recommended_book(book):
                 book.recommended = True
+                book.recommendation = user.get_profile().get_recommendation(book)
     return books
 
 
@@ -26,6 +26,18 @@ class UserProfile(models.Model):
     points = models.IntegerField(default=0, help_text="the current user points")
     bio = models.TextField(blank=True, null=True)
     books = models.ManyToManyField('Book', through='BookRelation')
+
+    def add_book(self, book, read):
+        book_relation, created = BookRelation.objects.get_or_create(book=book, read=read, user=self)
+
+    def remove_book(self, book):
+        BookRelation.objects.filter(book=book, user=self).delete()
+
+    def can_recommend_book(self, book):
+        for category in book.categories.all():
+            if self.books.filter(bookrelation__read=True, bookrelation__book__categories__in=[category.id]).distinct().count() >= 2:
+                return True
+        return False
 
     def wants_book(self, book):
         return self.books.filter(bookrelation__read=False, bookrelation__book=book).count() > 0
@@ -42,6 +54,9 @@ class UserProfile(models.Model):
     def recommended_books(self):
         return process_books(self._recommended_books(), self.user)
 
+    def get_recommendation(self, book):
+        return Recommendation.objects.get(book=book, user=self.user)
+
     def read_books(self):
         return process_books(self.books.filter(bookrelation__read=True), self.user)
         # .exclude(id__in=self._recommended_books()), self.user)
@@ -52,6 +67,9 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return "User profile for %s" % self.user.username
 
+    def get_absolute_url(self):
+        return self.user.get_absolute_url()
+
 
 class BookRelation(models.Model):
     user = models.ForeignKey('UserProfile')
@@ -59,7 +77,7 @@ class BookRelation(models.Model):
     read = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return "%s - %s" % (self.book, self.user.user.username)
+        return "%s - %s | %s" % (self.book, self.user.user.username, self.read)
 
 
 class BaseModel(models.Model):
@@ -75,6 +93,12 @@ class Recommendation(models.Model):
     user = models.ForeignKey(User)
     review = models.TextField()
     tags = TaggableManager()
+
+    def __unicode__(self):
+        return "%s - %s" % (self.user, self.book)
+
+    def get_absolute_url(self):
+        return reverse('books_recommendation_details', kwargs={'pk': self.pk})
 
 
 class RecommendationManager(models.Manager):
@@ -97,6 +121,7 @@ class Book(BaseModel):
     description = models.TextField()
     thumbnail_url = models.URLField(blank=True, null=True, verify_exists=False)
     info_link = models.URLField(blank=True, null=True, verify_exists=False)
+    objects = models.Manager()
     tags = TaggableManager()
     ordered = BookManager()
 

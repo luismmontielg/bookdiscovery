@@ -1,8 +1,33 @@
 {% extends "base.html" %}
 
+{% block extracss %}
+{{ block.super }}
+textarea {
+  height: 50px;
+  width: 90%;
+}
+{% endblock %}
+
 {% block title %}
+Details for {{ book }}
 {% endblock %}
 
 {% block container %}
-Book Details
+{% include "books_book_listing.html" %}
+
+<h1>User Recommendations</h1>
+{% for recommendation in book.recommendation_set.all %}
+{% include "books_recommendation_fragment.html" %}
+{% endfor %}
+
+{% if user.is_authenticated and can_recommend and not book.recommendation %}
+    <div class="row well">
+    <h1>Add a recommendation</h1>
+    <form action="{% url books_recommendation_create book.slug %}" method="POST">
+        {{ recommendation_form.as_p}}
+        {% csrf_token %}
+        <button class="btn btn-small btn-primary" type="submit">Submit</button>
+    </form>
+    <div>
+{% endif %}
 {% endblock %}

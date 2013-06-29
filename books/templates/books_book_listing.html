@@ -2,22 +2,29 @@
     <div>
         <div class="span7">
             {% if book.recommendations %}
-              <h3>{{ book }} <i class="icon-thumbs-up"> x {{ book.recommendations }}</i></h3>
+              <h3><a href="{{ book.get_absolute_url }}">{{ book }}</a> <i class="icon-thumbs-up"> x {{ book.recommendations }}</i></h3>
             {% else %}
-              <h3>{{ book }}</h3>
+              <h3><a href="{{ book.get_absolute_url }}">{{ book }}</a></h3>
             {% endif %}
             <p>{{book.authors.all|join:", "}}</p>
+            {% for category in book.categories.all %}
+                <li><a href="{{ category.get_absolute_url }}">{{ category }}</a></li>
+            {% endfor %}
+            <ul>
+            </ul>
             <p>{{ book.description|truncatewords:"245" }}</p>
             <div class="accordion">
               <div class="accordion-group">
                 <div class="accordion-heading">
-                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne{{forloop.counter0}}">
+                  <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne{{forloop.counter0}}{{ book_section }}">
                     Show/Hide details</a>
                 </div>
-                <div id="collapseOne{{forloop.counter0}}" class="accordion-body collapse">
+                <div id="collapseOne{{forloop.counter0}}{{book_section}}" class="accordion-body collapse">
                   <div class="accordion-inner">
                     <ul>
-                      <li>Publisher: {{book.publisher}}</li>
+                      {% if book.publisher %}
+                          <li>Publisher: {{book.publisher}}</li>
+                      {% endif %}
                       <li>Info link: <a href="{{book.info_link}}" target="_">{{ book.info_link }}</a></li>
                     </ul>
                   </div>
@@ -27,23 +34,35 @@
         </div>
         <div class="span2 pull-right book-right-panel">
             <img class="book-thumbnail" src="{{ book.thumbnail_url }}"/>
-            {% if book.read %}
-            <div class="btn btn-danger"><i class="icon-remove-sign"></i>&nbsp;Remove from list</div>
+            {% if not user.is_authenticated %}
+                <a href="{% url auth_login %}?next={{ request.path }}"><div class="btn btn-primary want-to-read-btn"><i class="icon-bookmark"></i>&nbsp;Want to read</div></a>
+                <a href="{% url auth_login %}?next={{ request.path }}"><div class="btn already-read-btn"><i class="icon-check"></i>&nbsp;Already read</div></a>
+                <a href="{% url books_recommendation_create book.slug %}"><div class="btn btn-success"><i class="icon-thumbs-up"></i>&nbsp;Recommend</div></a>
             {% else %}
-                {% if book.is_wanted %}
-                    <div class="btn btn-danger"><i class="icon-remove-sign"></i>&nbsp;Remove from list</div>
-                    <div class="btn"><i class="icon-check"></i>&nbsp;Already read</div>
-                {% else %}
-                    <div class="btn btn-primary"><i class="icon-bookmark"></i>&nbsp;Want to read</div>
-                    <div class="btn"><i class="icon-check"></i>&nbsp;Already read</div>
+                {% if not book.recommended %}
+                    {% if book.read and user == the_user.user %}
+                        <div bid="{{ book.id }}" class="btn btn-danger remove-from-list-btn"><i class="icon-remove-sign"></i>&nbsp;Remove from list</div>
+                    {% else %}
+                        {% if book.is_wanted and user == the_user.user %}
+                            <div bid="{{ book.id }}" class="btn btn-danger remove-from-list-btn"><i class="icon-remove-sign"></i>&nbsp;Remove from list</div>
+                            <div bid="{{ book.id }}" class="btn already-read-btn"><i class="icon-check"></i>&nbsp;Already read</div>
+                        {% else %}
+                            <div bid="{{ book.id }}" class="btn btn-primary want-to-read-btn"><i class="icon-bookmark"></i>&nbsp;Want to read</div>
+                            <div bid="{{ book.id }}" class="btn already-read-btn"><i class="icon-check"></i>&nbsp;Already read</div>
+                        {% endif %}
+                    {% endif %}
                 {% endif %}
-            {% endif %}
-            {% if book.recommended %}
-            <div class="btn btn-danger"><i class="icon-thumbs-down"></i>&nbsp;Un-Recommend</div>
-            {% else %}
-            <div class="btn btn-success"><i class="icon-thumbs-up"></i>&nbsp;Recommend</div>
+                {% if not recommending %}
+                    {% if book.recommended %}
+                        <form action="{% url books_recommendation_delete book.recommendation.pk %}" method="POST">
+                            {% csrf_token %}
+                            <button class="btn btn-danger" type="submit"><i class="icon-thumbs-down"></i>&nbsp;Un-Recommend</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url books_recommendation_create book.slug %}"><div class="btn btn-success"><i class="icon-thumbs-up"></i>&nbsp;Recommend</div></a>
+                    {% endif %}
+                {% endif %}
             {% endif %}
         </div>
     </div>
 </div>
-

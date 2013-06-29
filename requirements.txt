@@ -6,3 +6,4 @@ ipython==0.13.2
 unipath==1.0
 django-taggit==0.10a1
 South==0.8.1
+django-braces

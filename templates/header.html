@@ -1,3 +1,8 @@
+{% if user.is_authenticated %}
+<p class="pull-right">
+Hello {{ user.username }},&nbsp;<a href="{% url auth_logout %}?next=/">logout</a>
+</p>
+{% endif %}
 <div class="masthead">
 <h3 class="muted">Discover books</h3>
 <div class="navbar">
@@ -10,7 +15,7 @@
     {% if user.is_authenticated %}
 	    <li id="registration-li"><a href="{{ request.user.get_absolute_url }}">My Profile</a></li>
     {% else %}
-	    <li id="registration-li"><a href="{% url registration_register %}">Login/Register</a></li>
+	    <li id="registration-li"><a href="{% url auth_login %}">Login/Register</a></li>
     {% endif %}
       </ul>
     </div>

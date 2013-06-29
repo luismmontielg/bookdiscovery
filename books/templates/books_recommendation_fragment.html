@@ -1,0 +1,12 @@
+<div class="row book well">
+    <h4>User <a href="{{ recommendation.user.get_absolute_url }}">{{ recommendation.user.username }}</a> says:</h4>
+    <p>{{recommendation.review}}</p>
+    <p>
+        <h4>Tags</h4>
+        <ul>
+            {% for tag in recommendation.tags.all %}
+                <li>{{ tag.name }}</li>
+            {% endfor %}
+        </ul>
+    </p>
+</div>

@@ -1,35 +1,64 @@
 {% extends "base.html" %}
 
+{% block extracss %}
+{{ block.super }}
+textarea {
+  height: 40px;
+}
+
+form p {
+  display: inline;
+}
+
+.btn-small {
+  margin-left: 10px;
+}
+{% endblock %}
+
 {% block title %}
-User profile: {{ the_user.username }}
+User profile: {{ the_user.user.username }}
 {% endblock %}
 
 {% block container %}
-<h1>{{ the_user }} profile</h1>
-
-<p>{{ the_user.get_profile.bio }}</p>
+<h1>{{ the_user.user }} profile</h1>
+<p>This user has {{ the_user.points }} points</p>
+{% ifequal the_user.user request.user %}
+<form action="." method="POST">
+{{ form.as_p }}
+{% csrf_token %}
+<button class="btn btn-small btn-primary" type="submit">update</button>
+</form>
+{% else %}
+<p>{{ the_user.bio }}</p>
+{% endifequal %}
 
 
 <h2>Recommendations</h2>
-{% for book in the_user.get_profile.recommended_books %}
+{% with "recommendation" as book_section %}
+{% for book in the_user.recommended_books %}
 {% include "books_book_listing.html" %}
 {% empty %}
 The user has no recommended books
 {% endfor %}
+{% endwith %}
 
 <h2>Read Books</h2>
-{% for book in the_user.get_profile.read_books %}
+{% with "read_book" as book_section %}
+{% for book in the_user.read_books %}
 {% include "books_book_listing.html" %}
 {% empty %}
 The user has no books
 {% endfor %}
+{% endwith %}
 
 
 <h2>Want to read Books</h2>
-{% for book in the_user.get_profile.to_read_books %}
+{% with "want_to_read_book" as book_section %}
+{% for book in the_user.to_read_books %}
 {% include "books_book_listing.html" %}
 {% empty %}
 The user has no books
 {% endfor %}
+{% endwith %}
 
 {% endblock %}

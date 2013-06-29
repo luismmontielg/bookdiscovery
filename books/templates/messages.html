@@ -1,0 +1,10 @@
+<div id="messages">
+{% for message in messages %}
+<div class="alert alert-info" id="message_{{ forloop.counter }}" {% if message.tags %} class="{{ message.tags }}" {% endif %}>
+{{ message }}
+</div>
+{% endfor %}
+</div>
+
+<div style="top: 20px; display: none;" id="ok-div" class="alert alert-success affix fade in"></div>
+<div style="top: 20px; display: none;" id="error-div" class="alert alert-error affix fade in"></div>
